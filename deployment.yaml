@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderator-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderator-app
+  template:
+    metadata:
+      labels:
+        app: moderator-app
+    spec:
+      containers:
+        - name: moderator-app
+          image: vidyoportal.azurecr.io/moderatorapp:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderator-app
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: sample-app
