@@ -1,14 +1,20 @@
-FROM node:18-alpine3.17 as build
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine3.17
 
-WORKDIR /app
-COPY . /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install app dependencies
 RUN npm install
-RUN npm run build
 
-FROM ubuntu
-RUN apt-get update
-RUN apt-get install nginx -y
-COPY --from=build /app/dist /var/www/html/
-EXPOSE 80
-CMD ["nginx","-g","daemon off;"]
+# Bundle your app source
+COPY . .
+
+# Expose the port your app runs on
+EXPOSE 8080
+
+# Define the command to run your app
+CMD ["npm", "run", "dev"]
